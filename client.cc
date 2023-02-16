@@ -22,44 +22,42 @@
 
 #include <grpcpp/grpcpp.h>
 
-#ifdef BAZEL_BUILD
-#include "examples/protos/helloworld.grpc.pb.h"
-#else
-#include "helloworld.grpc.pb.h"
-#endif
+
+#include "echo.grpc.pb.h"
+#include "echo.pb.h"
+
 
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::Status;
-using helloworld::Greeter;
-using helloworld::HelloReply;
-using helloworld::HelloRequest;
+using pb::EchoService;
+using pb::Msg;
 
-class GreeterClient {
+class EchoClient {
  public:
-  GreeterClient(std::shared_ptr<Channel> channel)
-      : stub_(Greeter::NewStub(channel)) {}
+  EchoClient(std::shared_ptr<Channel> channel)
+      : stub_(EchoService::NewStub(channel)) {}
 
   // Assembles the client's payload, sends it and presents the response back
   // from the server.
   std::string SayHello(const std::string& user) {
     // Data we are sending to the server.
-    HelloRequest request;
-    request.set_name(user);
+    Msg request;
+    request.set_body(user);
 
     // Container for the data we expect from the server.
-    HelloReply reply;
+    Msg reply;
 
     // Context for the client. It could be used to convey extra information to
     // the server and/or tweak certain RPC behaviors.
     ClientContext context;
 
     // The actual RPC.
-    Status status = stub_->SayHello(&context, request, &reply);
+    Status status = stub_->echo(&context, request, &reply);
 
     // Act upon its status.
     if (status.ok()) {
-      return reply.message();
+      return reply.body();
     } else {
       std::cout << status.error_code() << ": " << status.error_message()
                 << std::endl;
@@ -68,7 +66,7 @@ class GreeterClient {
   }
 
  private:
-  std::unique_ptr<Greeter::Stub> stub_;
+  std::unique_ptr<EchoService::Stub> stub_;
 };
 
 int main(int argc, char** argv) {
@@ -98,11 +96,11 @@ int main(int argc, char** argv) {
   } else {
     target_str = "localhost:50051";
   }
-  GreeterClient greeter(
+  EchoClient client(
       grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials()));
   std::string user("world");
-  std::string reply = greeter.SayHello(user);
-  std::cout << "Greeter received: " << reply << std::endl;
+  std::string reply = client.SayHello(user);
+  std::cout << "Client received: " << reply << std::endl;
 
   return 0;
 }
