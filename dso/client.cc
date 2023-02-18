@@ -13,7 +13,10 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <iostream>
+#include <fstream>
 #include <arpa/inet.h>
+#include <dlfcn.h>
+
 
 using namespace std;
 
@@ -30,6 +33,21 @@ int mul(int x, int y) {
 }
 
 const int PORT = 8080;
+const int MAX_SIZE = 1e5;
+
+// todo replace stream
+int read_file(string file, void *addr) {
+    ifstream fd(file.c_str(), ifstream::binary);
+    if (!fd) {
+        cerr << "open file error" << endl;
+        return -1;
+    }
+    fd.read((char*)addr, MAX_SIZE);
+    int len = fd.gcount();
+    cout << "read " << len << " byte(s)" << endl;
+    fd.close();
+    return len;
+}
 
 int main() {
     int client_fd;
@@ -55,11 +73,10 @@ int main() {
     }
 
 
-    char buffer[100] = {"hello"};
-
-    send(client_fd, buffer, 5, 0);
-    cout << "sent mesage" << endl;
-    int len = read(client_fd, buffer, 100);
+    char *buffer = (char*)malloc(MAX_SIZE);
+    int len = read_file("libadd.so", buffer);
+    send(client_fd, buffer, len, 0);
+    cout << "sent libadd.so" << endl;
     close(connect_fd);
     return 0;
 }

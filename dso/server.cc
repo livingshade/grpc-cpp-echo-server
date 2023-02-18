@@ -13,6 +13,11 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <iostream>
+#include <fstream>
+#include <fcntl.h>
+#include <assert.h>
+#include <dlfcn.h>
+
 using namespace std;
 
 using fn_t = int(*)(int, int);
@@ -43,8 +48,55 @@ int main() {
     th.join();
 }
 
-
+const int MAX_SIZE = 1e5;
 const int PORT = 8080;
+const string SO_NAME_WRITE = "libadd2.so";
+const string SO_NAME_READ = "libadd.so";
+
+
+int read_file(string file, void *addr) {
+    ifstream fd(file.c_str(), ifstream::binary);
+    if (!fd) {
+        cerr << "open file error" << endl;
+        return -1;
+    }
+    fd.read((char*)addr, MAX_SIZE);
+    int len = fd.gcount();
+    cout << "read " << len << " byte(s)" << endl;
+    fd.close();
+    return len;
+}
+
+int write_file(string name, void *addr, int len) {
+    system(("rm -f " + name).c_str());
+    // otherwise we get permisson denied, idk why
+    int fd = open(name.c_str(), O_CREAT | O_RDWR | O_TRUNC, S_IRWXU);
+    if (fd < 0) {
+        cout << "fd error " << strerror(errno) << endl;
+        exit(-1);
+    }
+    int wrote = write(fd, addr, len);
+    fsync(fd);
+    cout << "wrote " << wrote << " bytes, expect: " << len << endl;
+    return wrote;
+}
+
+void* load_symbol(string file, string symbol) {
+    // note that ./ is necessary, otherwise the it won't be interpreted as path
+    void* handle = dlopen(("./" + file).c_str(), RTLD_NOW);
+    if (!handle) {
+        cerr << "error on dlopen " << dlerror() << endl;
+        exit(-1);
+    }
+    dlerror();
+    void* fp = dlsym(handle, symbol.c_str());
+    auto err = dlerror(); 
+    if (err) {
+        cerr << "error on dlsym " << dlerror() << endl;
+        exit(-1);
+    }
+    return fp;
+}
 
 void background_thread(void *addr) {
     int server_fd;
@@ -81,14 +133,14 @@ void background_thread(void *addr) {
         exit(-1);
     }
 
-    char buffer[100] = {};
-    int len = read(accept_fd, buffer, 100);
-    printf("%s\n", buffer);
-    cout << "receive !" << endl;
-    //auto ptr = (fn_t)*(uint64_t*)addr;
-    //ptr = &mul;
-    fp = &mul;
-    cout << "changed to mul!" << endl;
+    char buffer[MAX_SIZE] = {};
+    int len = read(accept_fd, buffer, MAX_SIZE);
+    int wrote = write_file(SO_NAME_WRITE.c_str(), buffer, len);
+    assert(len == wrote);
+
+    auto load_fp = (fn_t)load_symbol(SO_NAME_WRITE.c_str(), "add");
+    fp = load_fp;
+    cout << "changed to loaded fp!" << endl;
     send(accept_fd, "ack", 3, 0);
 
     close(accept_fd);
