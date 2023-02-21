@@ -1,6 +1,4 @@
-# C++ Project Template
-
-![cmake workflow](https://github.com/YanB25/cpp-project-template/actions/workflows/cmake.yml/badge.svg)
+# grpc-cpp-echo-server
 
 A C++ template to quickly start your own project.
 
@@ -8,51 +6,43 @@ This template includes a simplest runnable helloworld program, which breaks down
 
 ## Bootstrap
 
+```bash
+git clone --recurse-submodules <this_repo>
+```
+
+Make sure that gRPC cpp is installed in `$MY_INSTALL_DIR`, and can be found by `cmake find_package()`.
+
+You may need to refer to [https://grpc.io/docs/languages/cpp/quickstart/]
+
+Then run:
+
 ``` bash
-$ ./bootstrap.sh
+bash ./bootstrap.sh
 ```
 
 ## Compile
 
-``` bash
-mkdir build; cd build
-cmake -DCMAKE_BUILD_TYPE=Debug ..
+```shell
+mkdir -p build
+cd build
+cmake -DCMAKE_PREFIX_PATH=$MY_INSTALL_DIR -DCMAKE_BUILD_TYPE=Debug ..
 # or cmake -DCMAKE_BUILD_TYPE=Release ..
-# for more options, see CMakeLists.txt
 make -j
 ```
 
+
+
 ## Run
 
-``` bash
-$ ./bin/main
-hello world!
+Use two shells
+
+```shell
+./build/bin/client
+./build/bin/server
+
+# expect: Client received: Hello world
 ```
 
-## Install & Uninstall
+## Note
 
-``` bash
-# to install libs and headers
-sudo make install
-# to uninstall
-cat install_manifest.txt | sudo xargs rm -rf
-```
-
-## clang-format
-
-`clang-format` is an opt-in if you would like to use.
-
-``` bash
-sudo apt install clang-format
-```
-
-## Doxygen
-
-[doxygen](https://www.doxygen.nl/index.html) is supported if needed.
-
-To generate a document and open it
-
-``` bash
-doxygen Doxyfile
-open html/index.html
-```
+This repo uses https://github.com/YanB25/cpp-project-template as template
