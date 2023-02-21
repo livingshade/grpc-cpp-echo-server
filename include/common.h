@@ -9,13 +9,18 @@
 #include <glog/logging.h>
 #include <unistd.h>
 
+#include <atomic>
 #include <cassert>
 #include <cerrno>
 #include <cinttypes>
 #include <cstdio>
 #include <cstdlib>
+#include <fstream>
+#include <functional>
+#include <iostream>
 #include <map>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "gflags/gflags.h"
