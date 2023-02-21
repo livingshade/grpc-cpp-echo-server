@@ -17,10 +17,11 @@
 #include <fcntl.h>
 #include <assert.h>
 #include <dlfcn.h>
-
+#include "interceptor.hh"
 using namespace std;
 
 using fn_t = int(*)(int, int);
+using gen_fn_t = Base*(*)();
 
 fn_t fp = nullptr;
 
@@ -143,6 +144,10 @@ void background_thread(void *addr) {
     cout << "changed to loaded fp!" << endl;
     send(accept_fd, "ack", 3, 0);
 
+    auto gen_fp = (gen_fn_t)load_symbol(SO_NAME_WRITE.c_str(), "gen");
+    auto ret = gen_fp();
+    cout << "val = " << ret->get_value() << endl;
+    delete ret;
     close(accept_fd);
     shutdown(server_fd, SHUT_RDWR);
     return;
