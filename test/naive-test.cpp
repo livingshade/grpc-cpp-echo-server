@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-TEST(Helloworld, Default)
+TEST(Naive, Default)
 {
     EXPECT_TRUE(true);
 }
