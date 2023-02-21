@@ -12,12 +12,6 @@
 Language: Cpp
 BasedOnStyle: Google
 AccessModifierOffset: -4
-AllowShortFunctionsOnASingleLine: None
-AllowShortIfStatementsOnASingleLine: false
-AllowShortLoopsOnASingleLine: false
-BinPackArguments: false
-BinPackParameters: false
-BreakBeforeBraces: Allman
 DerivePointerAlignment: false
 FixNamespaceComments: true
 IncludeBlocks:   Regroup
@@ -35,12 +29,15 @@ IncludeCategories:
   - Regex:           '.*'
     Priority:        3
 IndentWidth: 4
-IndentCaseLabels: false
-MaxEmptyLinesToKeep: 1
-NamespaceIndentation: None
 PointerAlignment: Right
-SpaceAfterCStyleCast: true
+ColumnLimit: 120
+Standard: Latest
+Cpp11BracedListStyle: false
 SpacesInContainerLiterals: false
+SpaceAfterTemplateKeyword: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortBlocksOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 ---
 Language: Proto
 BasedOnStyle: Google

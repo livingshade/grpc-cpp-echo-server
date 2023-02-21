@@ -35,18 +35,15 @@ using pb::EchoService;
 using pb::Msg;
 
 // Logic and data behind the server's behavior.
-class EchoServiceImpl final : public EchoService::Service
-{
-    Status echo(ServerContext *context, const Msg *request, Msg *reply) override
-    {
+class EchoServiceImpl final : public EchoService::Service {
+    Status echo(ServerContext *context, const Msg *request, Msg *reply) override {
         std::string prefix("Hello ");
         reply->set_body(prefix + request->body());
         return Status::OK;
     }
 };
 
-void RunServer()
-{
+void RunServer() {
     std::string server_address("0.0.0.0:50051");
     EchoServiceImpl service;
 
@@ -67,8 +64,7 @@ void RunServer()
     server->Wait();
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     RunServer();
 
     return 0;
