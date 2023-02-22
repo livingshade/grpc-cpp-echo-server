@@ -95,7 +95,10 @@ file(GLOB_RECURSE PROJECT_PUBLIC_HEADER include/*)
 
 # source for the lib
 file(GLOB_RECURSE PROJECT_SOURCE src/*)
+file(GLOB_RECURSE SO_SOURCE so/*)
+
 add_library(project_obj OBJECT ${PROJECT_SOURCE})
+
 target_include_directories(project_obj PUBLIC ${PROJECT_INCLUDE_DIRECTORIES})
 
 target_link_libraries(project_obj PUBLIC grpc_proto ${_REFLECTION} ${_GRPC_GRPCPP} ${_PROTOBUF_LIBPROTOBUF})
@@ -103,6 +106,8 @@ target_link_libraries(project_obj PUBLIC grpc_proto ${_REFLECTION} ${_GRPC_GRPCP
 target_link_libraries(project_obj PUBLIC ${GLOG_LIBRARIES} ${GFLAGS_LIBRARIES})
 
 target_include_directories(project_obj PUBLIC ${GLOG_INCLUDE_DIRS} ${GFLAGS_INCLUDE_DIRS})
+
+add_subdirectory(so)
 
 if(${BUILD_UNITTEST})
     add_subdirectory(test)
