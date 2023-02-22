@@ -47,6 +47,7 @@ void *load_symbol(const string &file, const string &symbol, void *&handle) {
         exit(-1);
     }
     dlerror();
+    LOG(INFO) << "try open " << symbol << " in " << file;
     void *fp = dlsym(handle, symbol.c_str());
     auto err = dlerror();
     if (err) {

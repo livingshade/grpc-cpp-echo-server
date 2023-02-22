@@ -56,7 +56,9 @@ public:
     }
 };
 
+extern "C" {
 experimental::ClientInterceptorFactoryInterface *CreateClientInterceptorFactory() {
     return new NaiveInterceptorFactory();
+}
 }
 }  // namespace grpc
