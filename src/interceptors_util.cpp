@@ -19,7 +19,6 @@
 
 #include "echo.grpc.pb.h"
 #include "echo.pb.h"
-#include "gtest/gtest.h"
 
 using pb::Msg;
 
@@ -34,40 +33,6 @@ void MakeCall(const std::shared_ptr<Channel> &channel, const StubOptions &option
     req.set_body("Hello");
     Msg resp;
     Status s = stub->echo(&ctx, req, &resp);
-    EXPECT_EQ(s.ok(), true);
-    EXPECT_EQ(resp.body(), "Hello");
-}
-
-void MakeClientStreamingCall(const std::shared_ptr<Channel> &channel) {
-    // todo
-}
-
-void MakeServerStreamingCall(const std::shared_ptr<Channel> &channel) {
-    // todo
-}
-
-void MakeBidiStreamingCall(const std::shared_ptr<Channel> &channel) {
-    // todo
-}
-
-void MakeAsyncCQCall(const std::shared_ptr<Channel> &channel) {
-    // todo
-}
-
-void MakeAsyncCQClientStreamingCall(const std::shared_ptr<Channel> & /*channel*/) {
-    // TODO(yashykt) : Fill this out
-}
-
-void MakeAsyncCQServerStreamingCall(const std::shared_ptr<Channel> &channel) {
-    // todo
-}
-
-void MakeAsyncCQBidiStreamingCall(const std::shared_ptr<Channel> & /*channel*/) {
-    // TODO(yashykt) : Fill this out
-}
-
-void MakeCallbackCall(const std::shared_ptr<Channel> &channel) {
-    // todo
 }
 
 bool CheckMetadata(const std::multimap<grpc::string_ref, grpc::string_ref> &map, const string &key,

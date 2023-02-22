@@ -60,6 +60,7 @@
     "clangd.fallbackFlags": [
         "-I${workspaceFolder}/include",
         "-I${workspaceFolder}/gtest/googletest/include/gtest",
+        "-I${workspaceFolder}/gtest/googletest/include",
         "-I${workspaceFolder}/build",
         "-I/users/banruo/.local/include",
         "-I/usr/include",

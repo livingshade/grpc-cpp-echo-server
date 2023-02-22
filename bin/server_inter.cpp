@@ -4,6 +4,7 @@
 #include "echo.grpc.pb.h"
 #include "echo.pb.h"
 #include "grpchdr.h"
+#include "interceptors_util.h"
 #include "share.h"
 using namespace std;
 using namespace grpc;
@@ -37,11 +38,12 @@ int main() {
     auto fp = (factory_fp)(load_symbol(SO_NAME, "CreateClientInterceptorFactory", handle));
 
     unique_ptr<experimental::ClientInterceptorFactoryInterface> ptr(fp());
-    creators.push_back(ptr);
+    creators.emplace_back(std::move(ptr));
 
     ChannelArguments args;
     auto channel =
         experimental::CreateCustomChannelWithInterceptors(server_address, nullptr, args, std::move(creators));
 
+    MakeCall(channel);
     return 0;
 }

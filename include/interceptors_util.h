@@ -26,22 +26,6 @@ namespace grpc {
 
 void MakeCall(const std::shared_ptr<Channel> &channel, const StubOptions &options = StubOptions());
 
-void MakeClientStreamingCall(const std::shared_ptr<Channel> &channel);
-
-void MakeServerStreamingCall(const std::shared_ptr<Channel> &channel);
-
-void MakeBidiStreamingCall(const std::shared_ptr<Channel> &channel);
-
-void MakeAsyncCQCall(const std::shared_ptr<Channel> &channel);
-
-void MakeAsyncCQClientStreamingCall(const std::shared_ptr<Channel> &channel);
-
-void MakeAsyncCQServerStreamingCall(const std::shared_ptr<Channel> &channel);
-
-void MakeAsyncCQBidiStreamingCall(const std::shared_ptr<Channel> &channel);
-
-void MakeCallbackCall(const std::shared_ptr<Channel> &channel);
-
 bool CheckMetadata(const std::multimap<grpc::string_ref, grpc::string_ref> &map, const string &key,
                    const string &value);
 
