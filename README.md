@@ -1,9 +1,5 @@
 # grpc-cpp-echo-server
 
-A C++ template to quickly start your own project.
-
-This template includes a simplest runnable helloworld program, which breaks down into a `helloworld` lib (see src/ and include/helloworld/) and an executable (see bin/main.cpp).
-
 ## Bootstrap
 
 ```bash
@@ -32,8 +28,6 @@ cmake -DCMAKE_PREFIX_PATH=$MY_INSTALL_DIR -DCMAKE_BUILD_TYPE=Debug ..
 make -j
 ```
 
-
-
 ## Run
 
 We need three shells.
@@ -53,6 +47,8 @@ We need three shells.
 # nf_sender will change the server side interceptor
 # changing the reply from "hello! world" to "good byee hello! world"
 ```
+
+Note that in this sample, we only change server side interceptor from nothing to `naive_server_interceptor.cpp`. If you want to change the `.so`, remember to change the file size in `include/config.h`.
 
 ## TODO
 
