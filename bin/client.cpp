@@ -91,7 +91,8 @@ int main(int argc, char **argv) {
     } else {
         target_str = "localhost:50051";
     }
-    EchoClient client(grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials()));
+    auto channel = grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials());
+    EchoClient client(channel);
     std::string user("world");
     std::string reply = client.SayHello(user);
     std::cout << "Client received: " << reply << std::endl;

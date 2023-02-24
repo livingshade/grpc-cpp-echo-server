@@ -14,3 +14,4 @@
 #include <grpcpp/server_context.h>
 #include <grpcpp/server_posix.h>
 #include <grpcpp/support/client_interceptor.h>
+#include <grpcpp/support/server_interceptor.h>

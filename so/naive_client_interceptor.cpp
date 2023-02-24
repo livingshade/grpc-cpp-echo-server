@@ -1,16 +1,14 @@
 #include <fcntl.h>
 
-#include <memory>
-#include <vector>
 
 #include "common.h"
 #include "echo.grpc.pb.h"
 #include "echo.pb.h"
 
 namespace grpc {
-class NaiveInterceptor : public experimental::Interceptor {
+class NaiveClientInterceptor : public experimental::Interceptor {
 public:
-    explicit NaiveInterceptor(experimental::ClientRpcInfo *info) {
+    explicit NaiveClientInterceptor(experimental::ClientRpcInfo *info) {
         info_ = info;
         // Make sure it is the right method
     }
@@ -49,16 +47,16 @@ private:
     experimental::ClientRpcInfo *info_;
 };
 
-class NaiveInterceptorFactory : public experimental::ClientInterceptorFactoryInterface {
+class NaiveClientInterceptorFactory : public experimental::ClientInterceptorFactoryInterface {
 public:
     experimental::Interceptor *CreateClientInterceptor(experimental::ClientRpcInfo *info) override {
-        return new NaiveInterceptor(info);
+        return new NaiveClientInterceptor(info);
     }
 };
 
 extern "C" {
 experimental::ClientInterceptorFactoryInterface *CreateClientInterceptorFactory() {
-    return new NaiveInterceptorFactory();
+    return new NaiveClientInterceptorFactory();
 }
 }
 }  // namespace grpc

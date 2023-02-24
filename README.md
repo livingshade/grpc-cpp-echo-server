@@ -8,11 +8,13 @@ This template includes a simplest runnable helloworld program, which breaks down
 
 ```bash
 git clone --recurse-submodules <this_repo>
+
+git clone --recurse-submodules --depth 1 --shallow-submodules https://github.com/livingshade/grpc.git
 ```
 
-Make sure that gRPC cpp is installed in `$MY_INSTALL_DIR`, and can be found by `cmake find_package()`.
+This project uses a modified version of gRPC. But the installation is identical to offical gRPC [https://grpc.io/docs/languages/cpp/quickstart/]
 
-You may need to refer to [https://grpc.io/docs/languages/cpp/quickstart/]
+Make sure that gRPC cpp is installed in `$MY_INSTALL_DIR`, and can be found by `cmake find_package()`.
 
 Then run:
 
@@ -42,6 +44,8 @@ Use two shells
 
 # expect: Client received: Hello world
 ```
+
+## TODO
 
 ## Note
 
