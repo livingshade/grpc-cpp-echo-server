@@ -36,13 +36,22 @@ make -j
 
 ## Run
 
-Use two shells
+We need three shells.
+
+```shell
+./build/bin/server_dynamic
+# start the server
+```
 
 ```shell
 ./build/bin/client
-./build/bin/server
+# client will send request every 5s
+```
 
-# expect: Client received: Hello world
+```shell
+./build/bin/nf_sender
+# nf_sender will change the server side interceptor
+# changing the reply from "hello! world" to "good byee hello! world"
 ```
 
 ## TODO

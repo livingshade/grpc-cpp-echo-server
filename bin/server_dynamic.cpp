@@ -16,7 +16,7 @@ using s_factory_fp = experimental::ServerInterceptorFactoryInterface *(*)();
 
 class EchoServiceImpl final : public EchoService::Service {
     Status echo(ServerContext *context, const Msg *request, Msg *reply) override {
-        std::string prefix("original Hello!");
+        std::string prefix("Hello!");
         reply->set_body(prefix + request->body());
         return Status::OK;
     }
