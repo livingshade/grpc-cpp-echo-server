@@ -79,9 +79,9 @@ int main(int argc, char **argv) {
     EchoClient client(channel);
     std::string user("world");
     while (1) {
-        sleep(10);
         std::string reply = client.SayHello(user);
-        std::cout << "Client received: " << reply << " ctrl+c to exit" << std::endl;
+        std::cout << "Client received: " << reply << " (ctrl+c to exit)" << std::endl;
+        sleep(5);
     }
     return 0;
 }
