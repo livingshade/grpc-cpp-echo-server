@@ -17,14 +17,15 @@
  */
 
 #include <grpcpp/grpcpp.h>
+#include <grpcpp/security/server_credentials.h>
 
 #include <iostream>
 #include <memory>
 #include <string>
 
+#include "config.h"
 #include "echo.grpc.pb.h"
 #include "echo.pb.h"
-
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::Status;
@@ -71,31 +72,16 @@ int main(int argc, char **argv) {
     // specified by the argument "--target=" which is the only expected
     // argument. We indicate that the channel isn't authenticated (use of
     // InsecureChannelCredentials()).
-    std::string target_str;
-    std::string arg_str("--target");
-    if (argc > 1) {
-        std::string arg_val = argv[1];
-        size_t start_pos = arg_val.find(arg_str);
-        if (start_pos != std::string::npos) {
-            start_pos += arg_str.size();
-            if (arg_val[start_pos] == '=') {
-                target_str = arg_val.substr(start_pos + 1);
-            } else {
-                std::cout << "The only correct argument syntax is --target=" << std::endl;
-                return 0;
-            }
-        } else {
-            std::cout << "The only acceptable argument is --target=" << std::endl;
-            return 0;
-        }
-    } else {
-        target_str = "localhost:50051";
-    }
+    std::string target_str = SERVER_ADDRESS + ":" + std::to_string(SERVER_PORT);
+
     auto channel = grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials());
+    std::cout << "target addr: " << target_str << std::endl;
     EchoClient client(channel);
     std::string user("world");
-    std::string reply = client.SayHello(user);
-    std::cout << "Client received: " << reply << std::endl;
-
+    while (1) {
+        sleep(10);
+        std::string reply = client.SayHello(user);
+        std::cout << "Client received: " << reply << " ctrl+c to exit" << std::endl;
+    }
     return 0;
 }

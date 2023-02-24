@@ -19,7 +19,8 @@ int main() {
     int len = read_file(SO_NAME_CLIENT, buffer, FILE_MAX_SIZE);
     CHECK(len >= 0);
     LOG(INFO) << "Sender read .so size = " << len;
-    CHECK(write(client_fd, buffer, len) >= 0);
-    LOG(INFO) << "Sender sent .so";
+    auto wrote = write(client_fd, buffer, len);
+    LOG(INFO) << "Sender sent .so " << wrote;
+    sleep(1);
     return 0;
 }

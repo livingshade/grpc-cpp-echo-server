@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -19,7 +21,13 @@ int read_file(const string &filename, void *addr, int len) {
         LOG(ERROR) << "open failed " << strerror(errno);
         return -1;
     }
-    auto read_len = read(fd, addr, len);
+    struct stat sb;
+
+    if (fstat(fd, &sb) == -1) {
+        LOG(ERROR) << "fstat failed";
+        return -1;
+    }
+    auto read_len = read(fd, addr, std::min((int)len, (int)sb.st_size));
     LOG(INFO) << "read " << read_len << " byte(s)";
     close(fd);
     return read_len;
@@ -35,19 +43,22 @@ int write_file(const string &filename, void *addr, int len) {
     }
     int wrote = write(fd, addr, len);
     fsync(fd);  // todo remove fsync
+    close(fd);
     LOG(INFO) << "wrote " << wrote << " bytes, expect: " << len;
     return wrote;
 }
 
 void *load_symbol(const string &file, const string &symbol, void *&handle) {
     // note that ./ is necessary, otherwise the it won't be interpreted as path
-    handle = dlopen(("./" + file).c_str(), RTLD_NOW);
+    LOG(INFO) << "dlopen " << file;
+    handle = dlopen((file).c_str(), RTLD_NOW);
+    LOG(INFO) << "dlopen success";
     if (!handle) {
         LOG(ERROR) << "error on dlopen " << dlerror();
         exit(-1);
     }
     dlerror();
-    LOG(INFO) << "try open " << symbol << " in " << file;
+    LOG(INFO) << "Try open " << symbol << " in " << file;
     void *fp = dlsym(handle, symbol.c_str());
     auto err = dlerror();
     if (err) {
