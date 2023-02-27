@@ -6,7 +6,7 @@ foreach(SO ${SO_SRC})
     get_filename_component(SO_NAME ${SO} NAME_WE)
     add_library(${SO_NAME} SHARED ${SO})
     target_include_directories(${SO_NAME} PUBLIC ${SO_INCLUDE})
-    target_link_libraries(${SO_NAME} PUBLIC grpc_proto ${_REFLECTION} ${_PROTOBUF_LIBPROTOBUF})
+    target_link_libraries(${SO_NAME} PUBLIC grpc_proto)
 endforeach()
 
 enable_testing()

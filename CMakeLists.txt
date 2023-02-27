@@ -101,7 +101,7 @@ add_library(project_obj OBJECT ${PROJECT_SOURCE})
 
 target_include_directories(project_obj PUBLIC ${PROJECT_INCLUDE_DIRECTORIES})
 
-target_link_libraries(project_obj PUBLIC grpc_proto ${_REFLECTION} ${_GRPC_GRPCPP} ${_PROTOBUF_LIBPROTOBUF})
+target_link_libraries(project_obj PUBLIC grpc_proto)
 
 target_link_libraries(project_obj PUBLIC ${GLOG_LIBRARIES} ${GFLAGS_LIBRARIES})
 
