@@ -86,7 +86,7 @@ target_link_libraries(grpc_proto
 # dir to include
 set(PROJECT_INCLUDE_DIRECTORIES include)
 
-add_compile_options("-Wall" "-W" "-Wextra" "-fPIC")
+add_compile_options("-Wall" "-W" "-Wextra")
 
 add_subdirectory(gtest)
 
