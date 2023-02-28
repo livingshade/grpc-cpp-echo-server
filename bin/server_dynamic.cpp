@@ -31,17 +31,20 @@ void thread_function(int port, const std::string filename, void *ptr) {
     auto p = buffer;
     int len = -1, total = 0;
     sleep(1);
-    while (total < SO_SIZE && (len = read(accept_fd, p, FILE_MAX_SIZE)) > 0) {
-        p = p + len;
-        total += len;
-        LOG(INFO) << "read " << len << "total " << total;
-    }
-    LOG(INFO) << "Finish read, total = " << total;
-    CHECK(total >= 0);
-    write_file(filename, buffer, total);
-    LOG(INFO) << "Got .so from client, size = " << total;
+    // while (total < SO_SIZE && (len = read(accept_fd, p, FILE_MAX_SIZE)) > 0) {
+    //     p = p + len;
+    //     total += len;
+    //     LOG(INFO) << "read " << len << "total " << total;
+    // }
+    // LOG(INFO) << "Finish read, total = " << total;
+    // CHECK(total >= 0);
+    // write_file(filename, buffer, total);
+    // LOG(INFO) << "Got .so from client, size = " << total;
 
     // start to change interceptor
+
+    // We pretent we read the so from the function above
+    // TODO change to gRPC
     auto server_ptr = (grpc::Server *)ptr;
     vector<unique_ptr<experimental::ServerInterceptorFactoryInterface>> creators;
 

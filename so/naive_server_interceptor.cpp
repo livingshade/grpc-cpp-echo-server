@@ -16,7 +16,6 @@ public:
         }
         if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::PRE_SEND_MESSAGE)) {
             string old_msg = static_cast<const pb::Msg *>(methods->GetSendMessage())->body();
-            LOG(INFO) << "PRE_SEND_MESSAGE " << old_msg;
             new_msg_.set_body("Good bye:" + old_msg);
             methods->ModifySendMessage(&new_msg_);
             LOG(INFO) << "PRE_SEND_MESSAGE";
@@ -28,9 +27,8 @@ public:
             LOG(INFO) << "POST_RECV_INITIAL_METADATA";
         }
         if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::POST_RECV_MESSAGE)) {
-            // pb::Msg *resp = static_cast<pb::Msg *>(methods->GetRecvMessage());
-            // LOG(INFO) << "resp.body() at POST_RECV_MESSAGE " << resp->body();
-            // resp->set_body("Hello intercepted");
+            pb::Msg *resp = static_cast<pb::Msg *>(methods->GetRecvMessage());
+            resp->set_body("Hello intercepted");
             LOG(INFO) << "POST_RECV_MESSAGE";
         }
         if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::POST_RECV_STATUS)) {

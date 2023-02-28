@@ -11,16 +11,15 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char *argv[]) {
     int client_fd;
     int connect_fd;
+    // TODO add parse argv
     connect_client(SERVER_ADDRESS, NF_PORT, client_fd, connect_fd);
-    auto buffer = new char[FILE_MAX_SIZE];
-    int len = read_file(SO_NAME_CLIENT, buffer, FILE_MAX_SIZE);
-    CHECK(len >= 0);
-    LOG(INFO) << "Sender read .so size = " << len;
-    auto wrote = write(client_fd, buffer, len);
-    LOG(INFO) << "Sender sent .so " << wrote;
+    auto buffer = SO_NAME_SERVER.c_str();
+    LOG(INFO) << "SO name is " << buffer;
+    auto wrote = write(client_fd, buffer, SO_NAME_SERVER.size());
+    LOG(INFO) << "Sender sent .so name" << wrote;
     sleep(1);
     return 0;
 }
