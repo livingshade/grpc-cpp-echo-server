@@ -1,10 +1,9 @@
 #include <fcntl.h>
 
-
 #include "common.h"
 #include "echo.grpc.pb.h"
 #include "echo.pb.h"
-
+// get struct before send and after recv both client and server
 namespace grpc {
 class NaiveClientInterceptor : public experimental::Interceptor {
 public:
@@ -16,26 +15,39 @@ public:
     void Intercept(experimental::InterceptorBatchMethods *methods) override {
         bool hijack = false;
         if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::PRE_SEND_INITIAL_METADATA)) {
-            hijack = true;
+            LOG(INFO) << "PRE_SEND_INITIAL_METADATA";
         }
         if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::PRE_SEND_MESSAGE)) {
-            pb::Msg req;
-            auto *buffer = methods->GetSerializedSendMessage();
-            auto copied_buffer = *buffer;
-            SerializationTraits<pb::Msg>::Deserialize(&copied_buffer, &req).ok();
-            LOG(INFO) << "req.body() at PRE_SEND_MESSAGE " << req.body();
+            LOG(INFO) << "PRE_SEND_MESSAGE";
+
+            auto req = (const pb::Msg *)methods->GetSendMessage();
+            auto nreq = new pb::Msg;
+            nreq->set_body("[PRE_SEND]" + req->body());
+            methods->ModifySendMessage(nreq);
         }
-        if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::PRE_SEND_CLOSE)) {}
-        if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::POST_RECV_INITIAL_METADATA)) {}
+        if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::PRE_SEND_CLOSE)) {
+            LOG(INFO) << "PRE_SEND_CLOSE";
+        }
+        if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::POST_RECV_INITIAL_METADATA)) {
+            LOG(INFO) << "POST_RECV_INITIAL_METADATA";
+        }
         if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::POST_RECV_MESSAGE)) {
-            pb::Msg *resp = static_cast<pb::Msg *>(methods->GetRecvMessage());
-            LOG(INFO) << "resp.body() at POST_RECV_MESSAGE " << resp->body();
-            resp->set_body("Hello intercepted");
+            LOG(INFO) << "POST_RECV_MESSAGE";
+            auto req = (pb::Msg *)methods->GetRecvMessage();
+            req->set_body("[POST_RECV]" + req->body());
         }
-        if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::POST_RECV_STATUS)) {}
-        if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::PRE_RECV_INITIAL_METADATA)) {}
-        if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::PRE_RECV_MESSAGE)) {}
-        if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::PRE_RECV_STATUS)) {}
+        if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::POST_RECV_STATUS)) {
+            LOG(INFO) << "POST_RECV_STATUS";
+        }
+        if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::PRE_RECV_INITIAL_METADATA)) {
+            LOG(INFO) << "PRE_RECV_INITIAL_METADATA";
+        }
+        if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::PRE_RECV_MESSAGE)) {
+            LOG(INFO) << "PRE_RECV_MESSAGE";
+        }
+        if (methods->QueryInterceptionHookPoint(experimental::InterceptionHookPoints::PRE_RECV_STATUS)) {
+            LOG(INFO) << "PRE_RECV_STATUS";
+        }
         if (hijack) {
             methods->Hijack();
         } else {
