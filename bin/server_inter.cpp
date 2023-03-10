@@ -33,7 +33,7 @@ int main() {
     vector<unique_ptr<experimental::ClientInterceptorFactoryInterface>> creators;
 
     void *handle = nullptr;
-    auto fp = (factory_fp)(load_symbol(SO_NAME_CLIENT, "CreateClientInterceptorFactory", handle));
+    auto fp = (factory_fp)(load_symbol(SO_NAME_CLIENT, SYMBOL_NAME_CLIENT, handle));
 
     unique_ptr<experimental::ClientInterceptorFactoryInterface> ptr(fp());
     creators.emplace_back(std::move(ptr));

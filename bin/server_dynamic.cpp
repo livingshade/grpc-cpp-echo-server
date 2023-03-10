@@ -49,7 +49,7 @@ void thread_function(int port, const std::string filename, void *ptr) {
     vector<unique_ptr<experimental::ServerInterceptorFactoryInterface>> creators;
 
     void *handle = nullptr;
-    auto fp = (s_factory_fp)(load_symbol(SO_NAME_SERVER, "CreateServerInterceptorFactory", handle));
+    auto fp = (s_factory_fp)(load_symbol(SO_NAME_SERVER, SYMBOL_NAME_SERVER, handle));
 
     LOG(INFO) << "Symbol Loaded From " << SO_NAME_SERVER;
     unique_ptr<experimental::ServerInterceptorFactoryInterface> factory(fp());

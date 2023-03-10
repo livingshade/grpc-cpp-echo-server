@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
 
     void *handle = nullptr;
     auto fp =
-        (factory_fp)(load_symbol("./so/librate_limiter.so", "CreateClientInterceptorFactory", handle));
+        (factory_fp)(load_symbol("./so/librate_limiter.so", SYMBOL_NAME_CLIENT, handle));
 
     unique_ptr<experimental::ClientInterceptorFactoryInterface> ptr(fp());
     creators.emplace_back(std::move(ptr));
