@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
 
     void *handle = nullptr;
     auto fp =
-        (factory_fp)(load_symbol("./so/librate_limiter.so", SYMBOL_NAME_CLIENT, handle));
+        (factory_fp)(load_symbol(SO_NAME_CLIENT, SYMBOL_NAME_CLIENT, handle));
 
     unique_ptr<experimental::ClientInterceptorFactoryInterface> ptr(fp());
     creators.emplace_back(std::move(ptr));
@@ -97,8 +97,13 @@ int main(int argc, char **argv) {
 
     std::cout << "server addr: " << server_address << std::endl;
     EchoClient client(channel);
-    std::string user("world");
+    int cnt = 0;
     while (1) {
+        ++cnt;
+        std::string user("Bob");
+        if (cnt % 2) {
+            user = "Alice";
+        }
         std::string reply = client.SayHello(user);
         std::cout << "Client received:[" << reply << "] (ctrl+c to exit)" << std::endl;
         sleep(1);
