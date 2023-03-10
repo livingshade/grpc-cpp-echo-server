@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
 
     void *handle = nullptr;
     auto fp =
-        (factory_fp)(load_symbol("./so/libnaive_client_interceptor.so", "CreateClientInterceptorFactory", handle));
+        (factory_fp)(load_symbol("./so/librate_limiter.so", "CreateClientInterceptorFactory", handle));
 
     unique_ptr<experimental::ClientInterceptorFactoryInterface> ptr(fp());
     creators.emplace_back(std::move(ptr));
@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
     while (1) {
         std::string reply = client.SayHello(user);
         std::cout << "Client received:[" << reply << "] (ctrl+c to exit)" << std::endl;
-        sleep(5);
+        sleep(1);
     }
     return 0;
 }

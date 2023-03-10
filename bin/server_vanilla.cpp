@@ -24,6 +24,7 @@
 #include <memory>
 #include <string>
 
+#include "config.h"
 #include "echo.grpc.pb.h"
 #include "echo.pb.h"
 
@@ -37,6 +38,7 @@ using pb::Msg;
 // Logic and data behind the server's behavior.
 class EchoServiceImpl final : public EchoService::Service {
     Status echo(ServerContext *context, const Msg *request, Msg *reply) override {
+        std::cout << "Server received" << std::endl;
         std::string prefix("Hello ");
         reply->set_body(prefix + request->body());
         return Status::OK;
@@ -44,7 +46,7 @@ class EchoServiceImpl final : public EchoService::Service {
 };
 
 void RunServer() {
-    std::string server_address("0.0.0.0:50051");
+    std::string server_address = SERVER_ADDRESS + ":" + std::to_string(SERVER_PORT);
     EchoServiceImpl service;
 
     grpc::EnableDefaultHealthCheckService(true);
